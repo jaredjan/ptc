@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="passthecrumb POS" />
   <meta name="theme-color" content="#F7F1EA" />
+  <meta name="apple-mobile-web-app-title" content="passthecrumb POS" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
   <title>passthecrumb POS</title>
 
   <style>
@@ -25,6 +29,7 @@
       --accent-pale: #F3E6DA;
       --good: #6C8A68;
       --bad: #B85C53;
+      --warning: #C98736;
       --shadow: 0 18px 45px rgba(77, 52, 39, 0.12);
       --shadow-soft: 0 10px 24px rgba(77, 52, 39, 0.08);
       --radius-xl: 30px;
@@ -113,6 +118,15 @@
 
     button.good {
       background: var(--good);
+    }
+
+    button.bad,
+    button.danger {
+      background: var(--bad);
+    }
+
+    button.full {
+      width: 100%;
     }
 
     input,
@@ -228,7 +242,6 @@
       border-radius: 18px;
       display: grid;
       place-items: center;
-      flex: 0 0 auto;
       background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
       color: white;
       font-weight: 950;
@@ -237,8 +250,6 @@
     }
 
     h1 {
-      position: relative;
-      z-index: 1;
       margin: 0;
       font-size: clamp(2.4rem, 6vw, 5.4rem);
       line-height: 0.88;
@@ -248,8 +259,6 @@
     }
 
     .tagline {
-      position: relative;
-      z-index: 1;
       margin: 10px 0 0;
       color: var(--muted);
       font-size: 1rem;
@@ -332,6 +341,7 @@
       margin-bottom: 14px;
     }
 
+    .panel-title h2,
     .panel-head h2,
     h2,
     h3 {
@@ -341,6 +351,10 @@
 
     h2 {
       font-size: 1.28rem;
+    }
+
+    h3 {
+      font-size: 1rem;
     }
 
     .tabs {
@@ -381,7 +395,7 @@
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -412,13 +426,12 @@
       background: rgba(163, 92, 58, 0.10);
     }
 
-    .product-top,
-    .product-bottom {
-      position: relative;
+    .product-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
+      position: relative;
     }
 
     .chip {
@@ -459,8 +472,10 @@
     }
 
     .product-bottom {
+      position: relative;
       display: grid;
       grid-template-columns: 1fr auto;
+      gap: 10px;
       align-items: end;
       margin-top: auto;
     }
@@ -607,8 +622,7 @@
       letter-spacing: -0.06em;
     }
 
-    .checkout-actions,
-    .receipt-actions {
+    .checkout-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -629,7 +643,8 @@
       padding: 18px;
       border: 1px solid rgba(233, 216, 200, 0.95);
       border-radius: var(--radius-lg);
-      background: linear-gradient(180deg, #FFFDFC 0%, #FFF9F4 100%);
+      background:
+        linear-gradient(180deg, #FFFDFC 0%, #FFF9F4 100%);
       color: var(--ink);
       box-shadow: 0 10px 24px rgba(77, 52, 39, 0.06);
     }
@@ -670,7 +685,8 @@
 
     .receipt-meta,
     .receipt-lines,
-    .receipt-totals {
+    .receipt-totals,
+    .receipt-footer {
       padding-bottom: 10px;
       border-bottom: 1px dashed #cdb7a8;
     }
@@ -715,11 +731,20 @@
     }
 
     .receipt-footer {
+      border-bottom: 0;
+      padding-bottom: 0;
       text-align: center;
       color: var(--muted);
       font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-weight: 800;
       font-size: 0.78rem;
+    }
+
+    .receipt-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .receipt-empty {
@@ -841,22 +866,7 @@
       font-weight: 900;
     }
 
-    @media (max-width: 1200px) {
-      .app {
-        grid-template-columns: minmax(0, 1fr) minmax(330px, 0.72fr);
-      }
-
-      .receipt-panel {
-        grid-column: 1 / -1;
-        position: static;
-      }
-
-      .receipt {
-        min-height: 260px;
-      }
-    }
-
-    @media (max-width: 920px) {
+    @media (max-width: 1020px) {
       .brand-top {
         flex-direction: column;
         align-items: stretch;
@@ -908,7 +918,6 @@
       .toolbar,
       .form-grid,
       .checkout-actions,
-      .receipt-actions,
       .modal-actions {
         grid-template-columns: 1fr;
       }
@@ -1102,7 +1111,7 @@
 
       <div class="fields">
         <input id="newName" placeholder="product name e.g., mango graham cookie" />
-        <input id="newCategory" placeholder="category e.g., cookies, cakes, boxes" />
+        <input id="newCategory" placeholder="category e.g., cookies, cake slices, boxes" />
         <input id="newPrice" type="number" min="0" inputmode="decimal" placeholder="price" />
         <input id="newStock" type="number" min="0" inputmode="numeric" placeholder="stock prepared" />
         <textarea id="newDescription" placeholder="short description"></textarea>
@@ -1122,9 +1131,9 @@
     });
 
     const storageKeys = {
-      products: 'ptc_pos_products_v3',
-      cart: 'ptc_pos_cart_v3',
-      sales: 'ptc_pos_sales_v3'
+      products: 'ptc_menu_products_v2',
+      cart: 'ptc_menu_cart_v2',
+      sales: 'ptc_menu_sales_v2'
     };
 
     const startingProducts = [
@@ -1164,6 +1173,7 @@
         const value = localStorage.getItem(key);
         return value ? JSON.parse(value) : fallback;
       } catch (error) {
+        console.warn('Storage read failed:', error);
         return fallback;
       }
     }
@@ -1197,17 +1207,13 @@
       });
     }
 
-    function localDateKey(value = new Date()) {
-      const date = value instanceof Date ? value : new Date(value);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
+    function todayKey() {
+      return new Date().toISOString().slice(0, 10);
     }
 
     function getTodaySales() {
-      const key = localDateKey();
-      return sales.filter(sale => localDateKey(sale.date) === key);
+      const key = todayKey();
+      return sales.filter(sale => sale.date.slice(0, 10) === key);
     }
 
     function updateStats() {
@@ -1223,12 +1229,14 @@
     }
 
     function renderCategories() {
-      const categories = ['all', ...Array.from(new Set(products.map(product => product.category))).sort()];
-      document.getElementById('categoryTabs').innerHTML = categories.map(category => {
+      const categories = ['all', ...Array.from(new Set(products.map(p => p.category))).sort()];
+      const tabs = categories.map(category => {
         const active = category === activeCategory ? 'active' : '';
-        const count = category === 'all' ? products.length : products.filter(product => product.category === category).length;
+        const count = category === 'all' ? products.length : products.filter(p => p.category === category).length;
         return `<button class="tab ${active}" onclick="setCategory('${escapeAttribute(category)}')">${escapeHTML(category)} · ${count}</button>`;
       }).join('');
+
+      document.getElementById('categoryTabs').innerHTML = tabs;
     }
 
     function setCategory(category) {
@@ -1242,7 +1250,8 @@
       const filtered = products.filter(product => {
         const categoryMatch = activeCategory === 'all' || product.category === activeCategory;
         const text = `${product.name} ${product.category} ${product.description}`.toLowerCase();
-        return categoryMatch && (!query || text.includes(query));
+        const searchMatch = !query || text.includes(query);
+        return categoryMatch && searchMatch;
       });
 
       const grid = document.getElementById('productGrid');
@@ -1335,8 +1344,8 @@
       document.getElementById('discountType').value = 'none';
       document.getElementById('discountInput').value = 0;
       document.getElementById('cashInput').value = 0;
-      document.getElementById('notesInput').value = '';
       handleDiscountTypeChange();
+      document.getElementById('notesInput').value = '';
       saveAll();
       renderCart();
     }
@@ -1364,7 +1373,7 @@
           input.value = amount.toFixed(2);
         }
       } else if (type === 'custom') {
-        amount = roundMoney(Number(input && input.value ? input.value : 0));
+        amount = roundMoney(Number(input?.value || 0));
         label = 'Custom discount';
         if (input) input.readOnly = false;
       } else {
@@ -1388,6 +1397,12 @@
         if (type !== 'custom') input.value = 0;
       }
       renderCart();
+    }
+
+    function cartTotal() {
+      const subtotal = cartSubtotal();
+      const discount = getDiscountDetails(subtotal).amount;
+      return Math.max(0, subtotal - discount);
     }
 
     function renderCart() {
@@ -1569,112 +1584,6 @@
       lines.push('--------------------------------');
       lines.push('thank you for sharing good taste!');
       return lines.join('\n');
-    }
-
-    async function copyReceipt() {
-      if (!lastReceipt && sales.length) lastReceipt = buildReceipt(sales[0]);
-
-      if (!lastReceipt) {
-        showStatus('No receipt to copy yet.', true);
-        return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(lastReceipt);
-        showStatus('Receipt copied.');
-      } catch (error) {
-        showStatus('Copy not allowed by browser. Use export PNG instead.', true);
-      }
-    }
-
-    function renderHistory() {
-      const target = document.getElementById('historyTable');
-      renderReceiptPreview(sales[0]);
-
-      if (!sales.length) {
-        target.innerHTML = '<div class="empty">No sales recorded yet. Your first checkout will appear here.</div>';
-        updateStats();
-        return;
-      }
-
-      const rows = sales.slice(0, 14).map(sale => {
-        const items = sale.items.map(item => `${item.qty}× ${escapeHTML(item.name)}`).join('<br>');
-        return `
-          <tr>
-            <td>${new Date(sale.date).toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' })}</td>
-            <td>${items}</td>
-            <td>${escapeHTML(sale.paymentMethod)}</td>
-            <td><strong>${peso.format(sale.total)}</strong></td>
-          </tr>
-        `;
-      }).join('');
-
-      target.innerHTML = `
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>time</th>
-                <th>items</th>
-                <th>payment</th>
-                <th>total</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-      `;
-
-      updateStats();
-    }
-
-    function exportCSV() {
-      if (!sales.length) {
-        showStatus('No sales to export yet.', true);
-        return;
-      }
-
-      const rows = [[
-        'sale_id',
-        'date',
-        'items',
-        'subtotal',
-        'discount',
-        'discount_type',
-        'total',
-        'payment_method',
-        'cash_received',
-        'change',
-        'notes'
-      ]];
-
-      sales.forEach(sale => {
-        rows.push([
-          sale.id,
-          sale.date,
-          sale.items.map(item => `${item.qty}x ${item.name}`).join('; '),
-          sale.subtotal,
-          sale.discount,
-          sale.discountType || '',
-          sale.total,
-          sale.paymentMethod,
-          sale.cashReceived,
-          sale.change,
-          sale.notes || ''
-        ]);
-      });
-
-      const csv = rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `passthecrumb-sales-${localDateKey()}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      showStatus('CSV exported.');
     }
 
     function wrapCanvasText(ctx, text, maxWidth) {
@@ -1866,19 +1775,119 @@
       y += 19;
       text('@passthecrumb', logicalWidth / 2, y, 12, '700', '#A35C3A', 'center', 'Inter, Arial, sans-serif');
 
-      const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.download = `${sale.id}-passthecrumb-receipt.png`;
-      link.href = dataUrl;
+      link.href = canvas.toDataURL('image/png');
       document.body.appendChild(link);
       link.click();
       link.remove();
+      showStatus('Receipt PNG exported.');
+    }
 
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        setTimeout(() => window.open(dataUrl, '_blank'), 250);
+    async function copyReceipt() {
+      if (!lastReceipt && sales.length) lastReceipt = buildReceipt(sales[0]);
+
+      if (!lastReceipt) {
+        showStatus('No receipt to copy yet.', true);
+        return;
       }
 
-      showStatus('Receipt PNG exported.');
+      try {
+        await navigator.clipboard.writeText(lastReceipt);
+        showStatus('Receipt copied.');
+      } catch (error) {
+        showStatus('Copy not allowed by browser. Use export PNG instead.', true);
+      }
+    }
+
+    function renderHistory() {
+      const target = document.getElementById('historyTable');
+      renderReceiptPreview(sales[0]);
+
+      if (!sales.length) {
+        target.innerHTML = '<div class="empty">No sales recorded yet. Your first checkout will appear here.</div>';
+        updateStats();
+        return;
+      }
+
+      const rows = sales.slice(0, 14).map(sale => {
+        const items = sale.items.map(item => `${item.qty}× ${escapeHTML(item.name)}`).join('<br>');
+        return `
+          <tr>
+            <td>${new Date(sale.date).toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' })}</td>
+            <td>${items}</td>
+            <td>${escapeHTML(sale.paymentMethod)}</td>
+            <td><strong>${peso.format(sale.total)}</strong></td>
+          </tr>
+        `;
+      }).join('');
+
+      target.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>time</th>
+                <th>items</th>
+                <th>payment</th>
+                <th>total</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+
+      updateStats();
+    }
+
+    function exportCSV() {
+      if (!sales.length) {
+        showStatus('No sales to export yet.', true);
+        return;
+      }
+
+      const rows = [[
+        'sale_id',
+        'date',
+        'items',
+        'subtotal',
+        'discount',
+        'discount_type',
+        'total',
+        'payment_method',
+        'cash_received',
+        'change',
+        'notes'
+      ]];
+
+      sales.forEach(sale => {
+        rows.push([
+          sale.id,
+          sale.date,
+          sale.items.map(item => `${item.qty}x ${item.name}`).join('; '),
+          sale.subtotal,
+          sale.discount,
+          sale.discountType || '',
+          sale.total,
+          sale.paymentMethod,
+          sale.cashReceived,
+          sale.change,
+          sale.notes || ''
+        ]);
+      });
+
+      const csv = rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `passthecrumb-sales-${todayKey()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showStatus('CSV exported.');
     }
 
     function showProductModal() {
@@ -1957,6 +1966,13 @@
     });
 
     init();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .catch(error => console.log('Service worker registration failed:', error));
+      });
+    }
   </script>
 </body>
 </html>
